@@ -33,4 +33,15 @@ class DataController extends Controller
         }
         return redirect()->route('show');
     }
+    public function showthsx()
+    {
+        $html = file_get_html("C:/Users/VanThu/Downloads/SBA_t5.html");
+        //echo $html;
+        $ret = $html->find('table[id=MainContent_ctl00_gvItems]',0)->find('tr');
+        foreach ($ret as $key) {
+            foreach ($key ->find('td') as $td) {
+                echo $td.'<br>';
+            }
+        }
+    }
 }
