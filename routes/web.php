@@ -14,10 +14,14 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    //return view('welcome');
-    $sba = file_get_html("C:/Users/VanThu/Downloads/SBA_t5.html");
-	echo $sba;
+    return view('welcome');
 });
+
+//Route chức năng crawler dữ liệu html sử dụng html_dom
+Route::get('getfile','DataController@getfile')->name('getfile');
+Route::post('getfile','DataController@postfile')->name('postfile');
+
+//Route test chức năng kết nối mysql và sqlsrv
 Route::get('showthsx','DataController@showthsx');
 Route::get('showdata','DataController@show')->name('show');
 Route::post('showdata','DataController@postshow');
