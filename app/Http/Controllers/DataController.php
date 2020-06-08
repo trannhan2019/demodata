@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpClient\HttpClient;
 
 use App\Student_mysql;
 use App\Student_sqlsrv;
 use App\nam2019;
+use Goutte\Client;
 
 class DataController extends Controller
 {
+    //$client = new Client();
     public function show()
     {
         $sinhvien_mysql = Student_mysql::all();
@@ -52,32 +55,75 @@ class DataController extends Controller
     }
     public function postfile(Request $request)
     {
-        if($request->hasFile('file')){
-            //dd($request->file);
-            $html = file_get_html($request->file('file'));
-            $hang = $html->find('table[id=MainContent_ctl00_gvItems]',0)->find('tr');
-            foreach ($hang as $h) {
-                foreach ($h ->find('td') as $cot) {
-                    echo $cot;
-                    exit();
-                    $dt = new nam2019();
-                    if ($cot[0]=='KHE DIÊN') {
-                        $dt->muctieunam_id = 3;
-                    } else {
-                        $dt->muctieunam_id = 4;
-                    }
-                    $dt->user_id = 1;
-                    $dt->date = date('Y-m-d',strtotime(str_replace('/','-',$cot[1])));
-                    $dt->power = $cot[2];
-                    $dt->quantity = $cot[3];
-                    $dt->MNH = $cot[4];
-                    $dt->rain = $cot[5];
-                    $dt->device = $request->device;
-                    $dt->status = 'Tốt, đang hoạt động';
-                }
+        $html = file_get_html($request->file('file'));
+        //Cach 1
+        // $mang = array();
+        // foreach($html->find('table[id=MainContent_ctl00_gvItems] tr td') as $td){
+        //     $mang[] = $td->innertext;
+        // }
+        // dd($mang);
+        //cach 2
+        $html->find('table[id=MainContent_ctl00_gvItems] tr',0)->outertext='';
+        $html ->load($html ->save());
+        //$mang_cha = array();
+        foreach($html->find('table[id=MainContent_ctl00_gvItems] tr') as $tr){
+            $mang_con = array();
+            foreach($tr->find('td') as $td){
+                $mang_con[] = $td->innertext;
             }
+            $dt = new nam2019();
+            if ($mang_con[0]=='KHE DIÊN') {
+                $dt->muctieunam_id = 3;
+            } else {
+                $dt->muctieunam_id = 4;
+            }
+            $dt->user_id = 1;
+            $dt->date = date('Y-m-d',strtotime(str_replace('/','-',$mang_con[1])));
+            $dt->power = str_replace( ',', '.', $mang_con[2]);
+            $dt->quantity = str_replace( ',', '.', $mang_con[3]);
+            $dt->MNH = str_replace( ',', '.', $mang_con[4]);
+            $dt->rain = str_replace( ',', '.', $mang_con[5]);
+            $dt->device = 'Tốt, đang hoạt động';
+            $dt->status = 1;
+            $dt->save();
         }
+        // echo $mang_cha[0][0];
         $data = nam2019::orderBy('date','desc')->get();
         return view('data.showfile',compact('data'));
+        
     }
+    // public function postfile(Request $request)
+    // {
+    //     if($request->hasFile('file')){
+    //         dd($request->file);
+    //         $html = file_get_html($request->file('file'));
+    //         $hangs = $html->find('table[id=MainContent_ctl00_gvItems]',0)->find('tr');
+    //         foreach ($hangs as $hang) {
+    //             foreach ($hang->find('td') as $raw) {
+    //                 echo $raw->first-child;
+    //             }
+                
+    //             foreach ($hang ->find('td') as $cots) {
+
+    //                 $dt = new nam2019();
+    //                 if ($cot[0]=='KHE DIÊN') {
+    //                     $dt->muctieunam_id = 3;
+    //                 } else {
+    //                     $dt->muctieunam_id = 4;
+    //                 }
+    //                 $dt->user_id = 1;
+    //                 $dt->date = date('Y-m-d',strtotime(str_replace('/','-',$cot[1])));
+    //                 $dt->power = $cot[2];
+    //                 $dt->quantity = $cot[3];
+    //                 $dt->MNH = $cot[4];
+    //                 $dt->rain = $cot[5];
+    //                 $dt->device = 'Tốt, đang hoạt động';
+    //                 $dt->status = 1;
+    //                 $dt->save();
+    //             }
+    //         }
+    //     }
+    //     $data = nam2019::orderBy('date','desc')->get();
+    //     return view('data.showfile',compact('data'));
+    // }
 }

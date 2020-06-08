@@ -1,0 +1,6 @@
+INSERT INTO newDatabase.newtable1 (newColumn1, newColumn2) 
+SELECT oldcolumn1, oldcolumn2 FROM oldDatabase.oldtable1;
+
+INSERT INTO db1.table SELECT * FROM db2.table;
+
+INSERT INTO songbavn.thsxs (muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status) SELECT muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status  FROM demodata.nam2019s;

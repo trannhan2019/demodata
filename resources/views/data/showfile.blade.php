@@ -7,7 +7,7 @@
             </div>
             <div class="card-body">
                 <a href="{{ route('getfile') }}" class="btn btn-info">Thêm tiếp dữ liệu</a>
-                <table id="table_id" class="display">
+                <table id="table_id" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>id</th>
