@@ -1,6 +1,28 @@
-INSERT INTO newDatabase.newtable1 (newColumn1, newColumn2) 
+INSERT INTO newDatabase.newtable1 (newColumn1, newColumn2)
 SELECT oldcolumn1, oldcolumn2 FROM oldDatabase.oldtable1;
 
 INSERT INTO db1.table SELECT * FROM db2.table;
 
+-----------------------------------------------------------------------------
 INSERT INTO songbavn.thsxs (muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status) SELECT muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status  FROM demodata.nam2019s;
+
+
+INSERT INTO songba_songbavn.thsxs (muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status) SELECT muctieunam_id, user_id, date, power, quantity, MNH, rain, device, status  FROM songba_demodata.nam2018s;
+----------------------------------------------------
+ php artisan make:model nam2018 -m
+
+php artisan migrate
+ -------------------------------------------------
+$table->bigIncrements('id');
+$table->integer('muctieunam_id')->unsigned();
+$table->integer('user_id')->unsigned();
+$table->date('date');
+$table->float('power',8,2)->default(0);
+$table->float('quantity',8,3)->default(0);
+$table->float('MNH',8,2)->unsigned();
+$table->float('rain',8,1)->default(0);
+$table->string('device');
+$table->tinyInteger('status');
+$table->softDeletes();
+$table->timestamps();
+

@@ -7,7 +7,16 @@ use Symfony\Component\HttpClient\HttpClient;
 
 use App\Student_mysql;
 use App\Student_sqlsrv;
+use App\nam2020;
 use App\nam2019;
+use App\nam2018;
+use App\nam2017;
+use App\nam2016;
+use App\nam2015;
+use App\nam2014;
+use App\nam2013;
+use App\nam2012;
+use App\nam2011;
 use Goutte\Client;
 
 class DataController extends Controller
@@ -50,7 +59,7 @@ class DataController extends Controller
     }
 
     public function getfile()
-    { 
+    {
         return view('data.getfile');
     }
     public function postfile(Request $request)
@@ -71,11 +80,11 @@ class DataController extends Controller
             foreach($tr->find('td') as $td){
                 $mang_con[] = $td->innertext;
             }
-            $dt = new nam2019();
+            $dt = new nam2020();
             if ($mang_con[0]=='KHE DIÊN') {
-                $dt->muctieunam_id = 3;
+                $dt->muctieunam_id = 1;
             } else {
-                $dt->muctieunam_id = 4;
+                $dt->muctieunam_id = 2;
             }
             $dt->user_id = 1;
             $dt->date = date('Y-m-d',strtotime(str_replace('/','-',$mang_con[1])));
@@ -88,42 +97,8 @@ class DataController extends Controller
             $dt->save();
         }
         // echo $mang_cha[0][0];
-        $data = nam2019::orderBy('date','desc')->get();
+        $data = nam2020::orderBy('date','desc')->get();
         return view('data.showfile',compact('data'));
-        
-    }
-    // public function postfile(Request $request)
-    // {
-    //     if($request->hasFile('file')){
-    //         dd($request->file);
-    //         $html = file_get_html($request->file('file'));
-    //         $hangs = $html->find('table[id=MainContent_ctl00_gvItems]',0)->find('tr');
-    //         foreach ($hangs as $hang) {
-    //             foreach ($hang->find('td') as $raw) {
-    //                 echo $raw->first-child;
-    //             }
-                
-    //             foreach ($hang ->find('td') as $cots) {
 
-    //                 $dt = new nam2019();
-    //                 if ($cot[0]=='KHE DIÊN') {
-    //                     $dt->muctieunam_id = 3;
-    //                 } else {
-    //                     $dt->muctieunam_id = 4;
-    //                 }
-    //                 $dt->user_id = 1;
-    //                 $dt->date = date('Y-m-d',strtotime(str_replace('/','-',$cot[1])));
-    //                 $dt->power = $cot[2];
-    //                 $dt->quantity = $cot[3];
-    //                 $dt->MNH = $cot[4];
-    //                 $dt->rain = $cot[5];
-    //                 $dt->device = 'Tốt, đang hoạt động';
-    //                 $dt->status = 1;
-    //                 $dt->save();
-    //             }
-    //         }
-    //     }
-    //     $data = nam2019::orderBy('date','desc')->get();
-    //     return view('data.showfile',compact('data'));
-    // }
+    }
 }
